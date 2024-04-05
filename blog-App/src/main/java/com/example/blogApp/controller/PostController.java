@@ -3,6 +3,7 @@ package com.example.blogApp.controller;
 import com.example.blogApp.model.Post;
 import com.example.blogApp.payload.ApiResponse;
 import com.example.blogApp.payload.PostDto;
+import com.example.blogApp.payload.PostResponse;
 import com.example.blogApp.services.PostService;
 import org.apache.catalina.util.Introspection;
 import org.hibernate.persister.entity.SingleTableEntityPersister;
@@ -37,20 +38,20 @@ public class PostController {
         List<PostDto> postDtos= this.postService.getPostByCategory(catId);
         return new ResponseEntity<List<PostDto>>(postDtos,HttpStatus.OK);
     }
-//    @GetMapping("/posts")
-//    public ResponseEntity<List<PostDto>> getAllPost(@RequestParam(value = "pageNo",defaultValue = "1",required = false)Integer pageNo,
-//                                                    @RequestParam(value = "pageSize",defaultValue = "5",required = false)Integer pageSize){
-//        List<PostDto>postDtos=this.postService.getAllPost(pageNo,pageSize);
-//        return new ResponseEntity<List<PostDto>>(postDtos,HttpStatus.OK);
-//    }
-        @GetMapping("/posts")
-        public ResponseEntity<List<PostDto>> getAllPost(@RequestParam (defaultValue = "0") int page,
-                                                        @RequestParam (defaultValue = "10")int size){
-            Pageable pageable= PageRequest.of(page,size);
-            List<PostDto>postDtos=this.postService.getAllPost(pageable);
-            return new ResponseEntity<List<PostDto>>(postDtos,HttpStatus.OK);
-        }
-
+    @GetMapping("/posts")
+    public ResponseEntity<PostResponse> getAllPost(@RequestParam(value = "pageNo",defaultValue = "0",required = false)Integer pageNo,
+                                                   @RequestParam(value = "pageSize",defaultValue = "5",required = false)Integer pageSize){
+        PostResponse postResponse= this.postService.getAllPost(pageNo,pageSize);
+        return new ResponseEntity<PostResponse>(postResponse,HttpStatus.OK);
+    }
+//        @GetMapping("/posts")
+//        public ResponseEntity<List<PostDto>> getAllPost(@RequestParam (defaultValue = "0") int page,
+//                                                        @RequestParam (defaultValue = "10")int size){
+//            Pageable pageable= PageRequest.of(page,size);
+//            List<PostDto>postDtos=this.postService.getAllPost(pageable);
+//            return new ResponseEntity<List<PostDto>>(postDtos,HttpStatus.OK);
+//        }
+//
 
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostDto> getPostById(@PathVariable Integer postId){

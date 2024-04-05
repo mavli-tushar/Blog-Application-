@@ -5,6 +5,7 @@ import com.example.blogApp.model.Category;
 import com.example.blogApp.model.Post;
 import com.example.blogApp.model.User;
 import com.example.blogApp.payload.PostDto;
+import com.example.blogApp.payload.PostResponse;
 import com.example.blogApp.reposetory.CategoryRepo;
 import com.example.blogApp.reposetory.PostRepo;
 import com.example.blogApp.reposetory.UserRepo;
@@ -67,24 +68,32 @@ public class PostServiceImp implements PostService {
         this.postRepo.delete(post);
     }
 
+    @Override
+    public PostResponse getAllPost(Integer pageNo, Integer pageSize) {
+        Pageable p =PageRequest.of(pageNo,pageSize);
+       Page<Post> pagePost = this.postRepo.findAll(p);
+
+       List<Post>posts= pagePost.getContent();
+       List<PostDto> postDtos=posts.stream().map((post)->this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
+
+        PostResponse postResponse=new PostResponse();
+        postResponse.setContent(postDtos);
+        postResponse.setPageNo(pagePost.getNumber());
+        postResponse.setPageSize(pagePost.getSize());
+        postResponse.setTotalElement(pagePost.getTotalElements());
+        postResponse.setTotalPages(pagePost.getTotalPages());
+        postResponse.setLastPage(pagePost.isLast());
+
+        return postResponse;
+    }
+
 //    @Override
-//    public List<PostDto> getAllPost(Integer pageNo,Integer pageSize) {
-//        Pageable p =PageRequest.of(pageNo,pageSize);
-//       Page<Post> pagePost = this.postRepo.findAll(p);
-//
-//       List<Post>posts= pagePost.getContent();
-//       List<PostDto> postDtos=posts.stream().map((post)->this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
+//    public List<PostDto> getAllPost(Pageable pageable) {
+//        Page<Post> posts =this.postRepo.findAll(pageable);
+//        List<PostDto> postDtos=posts.stream().map((post)->this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
 //
 //        return postDtos;
 //    }
-
-    @Override
-    public List<PostDto> getAllPost(Pageable pageable) {
-        Page<Post> posts =this.postRepo.findAll(pageable);
-        List<PostDto> postDtos=posts.stream().map((post)->this.modelMapper.map(post,PostDto.class)).collect(Collectors.toList());
-
-        return postDtos;
-    }
 
 
     @Override

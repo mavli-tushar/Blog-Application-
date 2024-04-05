@@ -2,6 +2,7 @@ package com.example.blogApp.services;
 
 import com.example.blogApp.model.Post;
 import com.example.blogApp.payload.PostDto;
+import com.example.blogApp.payload.PostResponse;
 import com.example.blogApp.reposetory.PostRepo;
 import org.hibernate.persister.entity.SingleTableEntityPersister;
 import org.springframework.data.domain.Pageable;
@@ -15,8 +16,8 @@ public interface PostService {
     PostDto updatePost(PostDto postDto ,Integer postId);
 
     void deletePost(Integer postId);
-//    List<PostDto> getAllPost( Integer pageNo, Integer pageSize);
-    List<PostDto> getAllPost(Pageable pageable);
+    PostResponse getAllPost(Integer pageNo, Integer pageSize);
+//    List<PostDto> getAllPost(Pageable pageable);
 
     PostDto getPostById(Integer postId);
 
