@@ -1,8 +1,10 @@
 package com.example.blogApp.controller;
 
 import com.example.blogApp.model.Post;
+import com.example.blogApp.payload.ApiResponse;
 import com.example.blogApp.payload.PostDto;
 import com.example.blogApp.services.PostService;
+import org.apache.catalina.util.Introspection;
 import org.hibernate.persister.entity.SingleTableEntityPersister;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -43,5 +45,18 @@ public class PostController {
     public ResponseEntity<PostDto> getPostById(@PathVariable Integer postId){
        PostDto postDto= this.postService.getPostById(postId);
        return new ResponseEntity<PostDto>(postDto,HttpStatus.OK);
+    }
+
+    @DeleteMapping("/posts/{postId}")
+    public ApiResponse deletePost(@PathVariable Integer postId){
+        this.postService.deletePost(postId);
+        return new ApiResponse("Post Is Successfully deleted !!",true);
+
+    }
+
+    @PutMapping("/posts/{postId}")
+    public ResponseEntity<PostDto> updatePost( @RequestBody PostDto postDto, @PathVariable Integer postId){
+       PostDto updatedPost= this.postService.updatePost(postDto,postId);
+       return new ResponseEntity<PostDto>(updatedPost,HttpStatus.OK);
     }
 }
