@@ -7,6 +7,8 @@ import com.example.blogApp.services.PostService;
 import org.apache.catalina.util.Introspection;
 import org.hibernate.persister.entity.SingleTableEntityPersister;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -35,11 +37,20 @@ public class PostController {
         List<PostDto> postDtos= this.postService.getPostByCategory(catId);
         return new ResponseEntity<List<PostDto>>(postDtos,HttpStatus.OK);
     }
-    @GetMapping("/posts")
-    public ResponseEntity<List<PostDto>> getAllPost(){
-        List<PostDto>postDtos=this.postService.getAllPost();
-        return new ResponseEntity<List<PostDto>>(postDtos,HttpStatus.OK);
-    }
+//    @GetMapping("/posts")
+//    public ResponseEntity<List<PostDto>> getAllPost(@RequestParam(value = "pageNo",defaultValue = "1",required = false)Integer pageNo,
+//                                                    @RequestParam(value = "pageSize",defaultValue = "5",required = false)Integer pageSize){
+//        List<PostDto>postDtos=this.postService.getAllPost(pageNo,pageSize);
+//        return new ResponseEntity<List<PostDto>>(postDtos,HttpStatus.OK);
+//    }
+        @GetMapping("/posts")
+        public ResponseEntity<List<PostDto>> getAllPost(@RequestParam (defaultValue = "0") int page,
+                                                        @RequestParam (defaultValue = "10")int size){
+            Pageable pageable= PageRequest.of(page,size);
+            List<PostDto>postDtos=this.postService.getAllPost(pageable);
+            return new ResponseEntity<List<PostDto>>(postDtos,HttpStatus.OK);
+        }
+
 
     @GetMapping("/posts/{postId}")
     public ResponseEntity<PostDto> getPostById(@PathVariable Integer postId){
