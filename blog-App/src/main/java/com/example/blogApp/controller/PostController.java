@@ -40,8 +40,10 @@ public class PostController {
     }
     @GetMapping("/posts")
     public ResponseEntity<PostResponse> getAllPost(@RequestParam(value = "pageNo",defaultValue = "0",required = false)Integer pageNo,
-                                                   @RequestParam(value = "pageSize",defaultValue = "5",required = false)Integer pageSize){
-        PostResponse postResponse= this.postService.getAllPost(pageNo,pageSize);
+                                                   @RequestParam(value = "pageSize",defaultValue = "5",required = false)Integer pageSize,
+                                                   @RequestParam(value = "sortBy",defaultValue = "postId",required = false) String sortBy,
+                                                   @RequestParam(value = "sortDir",defaultValue = "ASC",required = false) String sortDir){
+        PostResponse postResponse= this.postService.getAllPost(pageNo,pageSize,sortBy,sortDir);
         return new ResponseEntity<PostResponse>(postResponse,HttpStatus.OK);
     }
 //        @GetMapping("/posts")
@@ -70,5 +72,11 @@ public class PostController {
     public ResponseEntity<PostDto> updatePost( @RequestBody PostDto postDto, @PathVariable Integer postId){
        PostDto updatedPost= this.postService.updatePost(postDto,postId);
        return new ResponseEntity<PostDto>(updatedPost,HttpStatus.OK);
+    }
+
+    @GetMapping("/posts/search/{keyword}")
+    public ResponseEntity<List<PostDto>> searchPostByTitle(@PathVariable("keyword") String keyword){
+        List<PostDto> result=this.postService.searchPost(keyword);
+        return new ResponseEntity<List<PostDto>>(result,HttpStatus.OK);
     }
 }
