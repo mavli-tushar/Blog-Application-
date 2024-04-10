@@ -1,12 +1,13 @@
 package com.example.blogApp.payload;
 
 import com.example.blogApp.model.Category;
+import com.example.blogApp.model.Comment;
 import com.example.blogApp.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
+import java.util.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +20,9 @@ public class PostDto {
     private Date addedDate;
     private CategoryDto category;
     private UserDto user;
+
+    private List<CommentDto> comments=new ArrayList<>();
+
 
 
 }

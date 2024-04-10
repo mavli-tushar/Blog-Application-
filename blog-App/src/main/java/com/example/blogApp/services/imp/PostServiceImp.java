@@ -7,6 +7,7 @@ import com.example.blogApp.model.User;
 import com.example.blogApp.payload.PostDto;
 import com.example.blogApp.payload.PostResponse;
 import com.example.blogApp.reposetory.CategoryRepo;
+import com.example.blogApp.reposetory.CommentRepo;
 import com.example.blogApp.reposetory.PostRepo;
 import com.example.blogApp.reposetory.UserRepo;
 import com.example.blogApp.services.PostService;
@@ -27,6 +28,8 @@ public class PostServiceImp implements PostService {
 
     @Autowired
     private PostRepo postRepo;
+    @Autowired
+    private CommentRepo commentRepo;
     @Autowired
     private ModelMapper modelMapper;
     @Autowired
@@ -107,7 +110,6 @@ public class PostServiceImp implements PostService {
     @Override
     public PostDto getPostById(Integer postId) {
         Post post=this.postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post","Post id",postId));
-
         return this.modelMapper.map(post,PostDto.class);
     }
 
