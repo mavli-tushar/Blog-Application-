@@ -8,13 +8,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Data
 public class UserDto {
     private int id;
     @NotEmpty
-    @Size(min = 4,message = "user must me minimum of 4 characters")
+    @Size(min = 4,message = "user must be minimum of 4 characters")
     private String name;
     @Email(message = "Email addres is not valid !!")
     private String email;
@@ -23,4 +28,5 @@ public class UserDto {
     private String password;
     @NotEmpty
     private String about;
+    private List<RoleDto> roles = new ArrayList<>();
 }

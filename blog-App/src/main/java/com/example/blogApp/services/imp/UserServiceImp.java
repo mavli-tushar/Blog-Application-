@@ -1,12 +1,16 @@
 package com.example.blogApp.services.imp;
 
+import com.example.blogApp.config.AppConstants;
 import com.example.blogApp.exception.ResourceNotFoundException;
+import com.example.blogApp.model.Role;
 import com.example.blogApp.model.User;
 import com.example.blogApp.payload.UserDto;
+import com.example.blogApp.reposetory.RoleRepo;
 import com.example.blogApp.reposetory.UserRepo;
 import com.example.blogApp.services.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +21,22 @@ public class UserServiceImp implements UserService {
     private UserRepo userRepo;
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private RoleRepo roleRepo;
+    @Override
+    public UserDto registerNewUser(UserDto userDto) {
+        User user= this.modelMapper.map(userDto,User.class);
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+
+        Role role = this.roleRepo.findById(AppConstants.NORMAL_USER).get();
+        user.getRoles().add(role);
+       User updatedUser= this.userRepo.save(user);
+       return this.modelMapper.map(updatedUser,UserDto.class);
+    }
+
     @Override
     public UserDto createUser(UserDto userDto) {
         User user=this.dtoToUser(userDto);
@@ -58,8 +78,6 @@ public class UserServiceImp implements UserService {
     public void deleteUser(Integer userId) {
         User user=this.userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("User","id",userId));
         this.userRepo.delete(user);
-
-
     }
 
     private User dtoToUser(UserDto userDto){
